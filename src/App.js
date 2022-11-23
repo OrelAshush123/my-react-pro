@@ -33,7 +33,6 @@ function App() {
 
   useEffect( () => {
     
-    
     const getItems = async () => {
       check()
       console.log("start")
