@@ -19,6 +19,12 @@ function App() {
   const check = async () => { // לעדכן את הרשימה לפי הפייר-בייס כל כמה שניות
     while (true) {
       await sleep(3500)
+      try { const data = await getDocs(collectionRef); const DOCdata = data.docs.map((doc) => ({...doc.data()}));
+        let x = DOCdata[0].myList.length; // לנסות לגשת לאורך
+        
+      } catch (e) { // אם זה תוכן המסמכך נמחק נאתחל אותו כמו שצריך
+      await setDoc(doc(firestore, "Items", "Item List"), { myList: items }) 
+      }
       const dataForC = await getDocs(collectionRef); //ליבא את האוסף איטם
       try{
         const DOCdataR = dataForC.docs.map((doc) => ({...doc.data()})) //והוציא מהאוסף את הדוקומנטים
@@ -38,12 +44,19 @@ function App() {
       const data = await getDocs(collectionRef);
       // אותו רעיון כמו לעדכן (לוקחים את האוסף וקוראים מסמך ספציפי)
       const DOCdata = data.docs.map((doc) => ({...doc.data()}))
-      if(DOCdata[0].myList.length !== 0)
-      {
-        SetItems(DOCdata[0].myList)
-        console.log("finish")
+      try{
+        if(DOCdata[0].myList.length !== 0)
+        {
+          SetItems(DOCdata[0].myList)
+          console.log("finish")
+        }
+      } catch (e){
+        console.log("finish BUT NO DATA GET")
+        let data = {
+          myList: items
+        }; // <-מה ששומרים
+        await setDoc(doc(firestore, "Items", "Item List"), data)  // פעולת השמירה
       }
-      
       
     }
     try {
